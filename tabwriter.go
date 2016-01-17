@@ -51,8 +51,8 @@ type cell struct {
 // this may not be true in some fonts.
 //
 // ** Note **
-// This is not true anymore, now we will assume CJK(Chinese-Japanise-Korean)
-// words hava width of 2 columes (not all but for most)
+// This is not true anymore, now we will assume CJK(Chinese-Japanese-Korean)
+// words have width of 2 columes (not all but for most)
 // ******************************************************************
 //
 // If DiscardEmptyColumns is set, empty columns that are terminated
