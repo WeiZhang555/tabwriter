@@ -16,7 +16,7 @@ import (
 	"io"
 	"unicode/utf8"
 
-	eaw "github.com/moznion/go-unicode-east-asian-width"
+	"golang.org/x/text/width"
 )
 
 // ----------------------------------------------------------------------------
@@ -385,20 +385,28 @@ func (b *Writer) append(text []byte) {
 	b.cell.size += len(text)
 }
 
+func kindWidth(k width.Kind) int {
+	switch k {
+	case width.EastAsianAmbiguous:
+		return 1
+	case width.EastAsianWide:
+		return 2
+	case width.EastAsianFullwidth:
+		return 2
+	}
+	return 1
+}
+
 // calculate display width
 // CJK word covers 2 columes
 func (b *Writer) displayWidth(words []byte) (dw int) {
-	dw = 0
-	for len(words) > 0 {
-		r, size := utf8.DecodeRune(words)
-		//fmt.Printf("%c %v\n", r, size)
-		if eaw.IsFullwidth(r) {
-			dw += 2
-		} else {
-			dw++
+	for i := 0; i < len(words); {
+		p, s := width.Lookup(words)
+		if s <= 0 {
+			return
 		}
-
-		words = words[size:]
+		dw += kindWidth(p.Kind())
+		i += s
 	}
 	return
 }
