@@ -14,9 +14,8 @@ package tabwriter
 import (
 	"bytes"
 	"io"
-	"unicode/utf8"
 
-	"golang.org/x/text/width"
+	"github.com/mattn/go-runewidth"
 )
 
 // ----------------------------------------------------------------------------
@@ -385,39 +384,9 @@ func (b *Writer) append(text []byte) {
 	b.cell.size += len(text)
 }
 
-func kindWidth(k width.Kind) int {
-	switch k {
-	case width.EastAsianAmbiguous:
-		return 1
-	case width.EastAsianWide:
-		return 2
-	case width.EastAsianFullwidth:
-		return 2
-	}
-	return 1
-}
-
-// calculate display width
-// CJK word covers 2 columes
-func (b *Writer) displayWidth(words []byte) (dw int) {
-	for i := 0; i < len(words); {
-		p, s := width.Lookup(words)
-		if s <= 0 {
-			return
-		}
-		dw += kindWidth(p.Kind())
-		i += s
-	}
-	return
-}
-
 // Update the cell width.
 func (b *Writer) updateWidth() {
-	displayWidth := b.displayWidth(b.buf.Bytes()[b.pos:b.buf.Len()])
-	if displayWidth == 0 {
-		displayWidth = utf8.RuneCount(b.buf.Bytes()[b.pos:b.buf.Len()])
-
-	}
+	displayWidth := runewidth.StringWidth(string(b.buf.Bytes()[b.pos:b.buf.Len()]))
 	b.cell.width += displayWidth
 	b.pos = b.buf.Len()
 }

@@ -376,8 +376,8 @@ var tests = []struct {
 			"aaa\tèèèè\t\n",
 
 		"       a       è       c\n" +
-			"      aa     èèè    cccc   ddddd\n" +
-			"     aaa    èèèè\n",
+			"      aa   èèè    cccc   ddddd\n" +
+			"     aaa èèèè\n",
 	},
 
 	{
@@ -606,6 +606,26 @@ var tests = []struct {
 			"a\n" +
 			"a\t|b\t|c\t|d\n" +
 			"a\t|b\t|c\t|d\t|e\n",
+	},
+
+	{
+		"17a",
+		1, 0, 4, '.', 0,
+		"一二三abc\tb\tc\n" +
+			"hello\tb\tc",
+
+		"一二三abc....b....c\n" +
+			"hello........b....c",
+	},
+
+	{
+		"17b",
+		1, 0, 4, '.', 0,
+		"123abc\tb\tc\n" +
+			"hello\tb\tc",
+
+		"123abc....b....c\n" +
+			"hello.....b....c",
 	},
 }
 
